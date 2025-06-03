@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OpenPLC Control</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 100px;
+        }
+        .btn {
+            padding: 15px 30px;
+            font-size: 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .on { background-color: #4CAF50; color: white; }
+        .off { background-color: #f44336; color: white; }
+    </style>
+</head>
+<body>
+    <h1>OpenPLC Web Control</h1>
+    <p>Coil 0 Status: <strong>{{ 'ON' if coil_0 else 'OFF' }}</strong></p>
+    <a href="/coil/on"><button class="btn on">Turn ON</button></a>
+    <a href="/coil/off"><button class="btn off">Turn OFF</button></a>
+</body>
+</html>
