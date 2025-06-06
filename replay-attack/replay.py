@@ -26,8 +26,22 @@ b' => indicates its in bytes
 
 modbus_payload = b'\x00\x01\x00\x00\x00\x06\x01\x05\x00\x00\xff\x00'
 
-# Build a fake TCP/IP packet with the payload
-packet = IP(dst=MODBUS_SERVER_IP)/TCP(dport=MODBUS_PORT, sport=RandShort(), flags="PA")/Raw(load=modbus_payload)
+# Random source port
+sport = RandShort()
 
-# Send packet
-send(packet, verbose=1)
+# IP and initial TCP SYN
+ip = IP(dst=MODBUS_SERVER_IP)
+syn = TCP(sport=sport, dport=MODBUS_PORT, flags="S", seq=1000)
+syn_ack = sr1(ip/syn, timeout=2)
+
+if syn_ack and syn_ack.haslayer(TCP) and syn_ack[TCP].flags == "SA":
+    ack = TCP(sport=sport, dport=MODBUS_PORT, flags="A", seq=syn_ack.ack, ack=syn_ack.seq + 1)
+    send(ip/ack)
+
+    # Now send PSH+ACK with payload
+    psh = TCP(sport=sport, dport=MODBUS_PORT, flags="PA", seq=syn_ack.ack, ack=syn_ack.seq + 1)
+    send(ip/psh/Raw(load=modbus_payload))
+
+    print("Modbus payload sent.")
+else:
+    print("Failed to complete TCP handshake — is the Modbus server reachable?")
