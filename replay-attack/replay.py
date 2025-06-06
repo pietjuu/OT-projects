@@ -75,6 +75,8 @@ else:
     print("TCP handshake failed. Check if Modbus server is online.")
 """
 
+# ROOT ISSUE: TCP/IP 3 WAY HANDSHAKE IS NOT CORRECTLY ESTABLISHED? SYN FIN DATA IS 0 AND SHOULD BE 1 (WIRESHARK)
+
 #Libraries
 from scapy.all import *
 from scapy.layers.inet import *
