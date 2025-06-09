@@ -77,47 +77,36 @@ else:
 
 # ROOT ISSUE: TCP/IP 3 WAY HANDSHAKE IS NOT CORRECTLY ESTABLISHED? SYN FIN DATA IS 0 AND SHOULD BE 1 (WIRESHARK)
 
-#Libraries
 from scapy.all import *
 from scapy.layers.inet import *
 
 # Target (PLC or Modbus Server)
 TARGET_IP = "192.168.68.117"
 TARGET_PORT = 502
-
-# Use a valid client-side source port (not 502!)
 SPORT = RandShort()
 SEQ = 1000
 
-# Modbus TCP Payload:
-# Transaction ID: 0x0001
-# Protocol ID: 0x0000
-# Length: 0x0006
-# Unit ID: 0x01
-# Function: 0x05 (Write Single Coil)
-# Address: 0x0000
-# Value: 0xFF00 (ON)
 modbus_payload = b'\x00\x01\x00\x00\x00\x06\x01\x05\x00\x00\xff\x00'
 
-# Build IP and initial SYN packet
 ip = IP(dst=TARGET_IP)
 syn = TCP(sport=SPORT, dport=TARGET_PORT, flags="S", seq=SEQ)
 
-# Step 1: Send SYN, receive SYN-ACK
 print("[*] Sending SYN...")
 synack = sr1(ip/syn, timeout=2)
-if not synack or synack.getlayer(TCP).flags != "SA":
-    print("[!] No SYN-ACK received. Connection failed.")
+if not synack or not synack.haslayer(TCP) or synack[TCP].flags != "SA":
+    print("[!] SYN-ACK not received.")
     exit()
 
-# Step 2: Send ACK to complete handshake
-ack = TCP(sport=SPORT, dport=TARGET_PORT, flags="A",
-          seq=synack.ack, ack=synack.seq + 1)
-send(ip/ack, verbose=0)
-print("[*] Handshake complete.")
+print("[*] Received SYN-ACK.")
 
-# Step 3: Send PSH+ACK with Modbus command
+# Fix here: use original SEQ+1 as the ACK's SEQ
+ack = TCP(sport=SPORT, dport=TARGET_PORT, flags="A",
+          seq=SEQ + 1, ack=synack.seq + 1)
+send(ip/ack, verbose=0)
+print("[*] Sent ACK.")
+
+# Now send payload
 psh = TCP(sport=SPORT, dport=TARGET_PORT, flags="PA",
-          seq=synack.ack, ack=synack.seq + 1)
+          seq=SEQ + 1, ack=synack.seq + 1)
 send(ip/psh/Raw(load=modbus_payload), verbose=0)
-print("[*] Modbus payload sent.")
+print("[*] Sent Modbus payload.")
