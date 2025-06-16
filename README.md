@@ -47,7 +47,24 @@ The used program for this project is a simple start stop mechanism.
 A more detailed explantation of the program can be found in the wiki.
 ![img.png](img.png)
 
+#### Wiring
 The wiring is as follows:
+![img_1.png](img_1.png)
+A more detailed explantation of the wiring can be found in the wiki.
+
+### Python files
+The project contains 2 pythong files:
+- init.py => creates a webserver (HMI)
+- webserverThatSendsModbus.py => program that sends and reads modbus (functionality of HMI)
+
+The init.py is the simulation of the HMI. It sends and reads MODBUS to a target device.
+In this case the target device is the raspberry PI acting like a PLC. 
+
+### Demo
+=> filmpje met wat er gebeurd  
+=> scrrenshots met wireshark  
+=> ander programma laten runnen en tonen hoe je modbus kan aanpassen van elk device 
+
 
 
 ---
