@@ -32,7 +32,23 @@ can be found here (inser link naar wiki met modbus doc)
 
 ## WebAPP-OT project
 
-Here is some text for the first section.
+This project is specify development to see how easy an MODBUS connection is established and
+how easy it is to manipulate it.
+The project has 2 main components:
+- The hardware setup => OpenPLC program and wiring
+- The python files
+
+### The hardware setup
+Like said before the hardware setup has 2 main components.  
+These are the OpenPLC program and the actual wiring.
+
+#### OpenPLC program
+The used program for this project is a simple start stop mechanism.
+A more detailed explantation of the program can be found in the wiki.
+![img.png](img.png)
+
+The wiring is as follows:
+
 
 ---
 
