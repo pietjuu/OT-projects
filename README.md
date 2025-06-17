@@ -61,7 +61,10 @@ The init.py is the simulation of the HMI. It sends and reads MODBUS to a target 
 In this case the target device is the raspberry PI acting like a PLC. 
 
 ### Demo
-=> filmpje met wat er gebeurd  
+In this section you will see 2 videos.  
+The first video shows how the project works. When you press the physical buttons the light goes on or off and one you
+press the button on the HMI (webserver) the light goes on or off.
+[Video Project.mp4](Video%20Project.mp4)  
 => scrrenshots met wireshark  
 => ander programma laten runnen en tonen hoe je modbus kan aanpassen van elk device 
 
