@@ -63,8 +63,8 @@ In this case the target device is the raspberry PI acting like a PLC.
 ### Demo
 In this section you will see 2 videos.  
 The first video shows how the project works. When you press the physical buttons the light goes on or off and one you
-press the button on the HMI (webserver) the light goes on or off.
-![Watch the video](https://raw.githubusercontent.com/pietjuu/OT-projects/blob/main/Video Project.mp4)](https://raw.githubusercontent.com/pietjuu/OT-projects/blob/main/Video Project.mp4)  
+press the button on the HMI (webserver) the light goes on or off.  
+![Watch the video](https://raw.githubusercontent.com/pietjuu/OT-projects/blob/main/OT.mp4)](https://raw.githubusercontent.com/pietjuu/OT-projects/blob/main/OT.mp4)  
 
 => scrrenshots met wireshark  
 => ander programma laten runnen en tonen hoe je modbus kan aanpassen van elk device 
