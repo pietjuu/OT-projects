@@ -9,7 +9,7 @@ SECRET_KEY = "django-insecure-change-this-key"
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Applications
@@ -98,8 +98,4 @@ STATICFILES_DIRS = [
 # Default primary key
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-ALLOWED_HOSTS = [
-    "192.168.1.50",
-    "localhost",
-    "127.0.0.1",
-]
+ALLOWED_HOSTS = ['*']
