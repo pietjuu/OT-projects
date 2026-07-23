@@ -44,7 +44,7 @@ def main():
         # --- Scenario 3: alarmdrempel verlagen om alarm_hoog te forceren ---
         print("\n>> Testdrempel instellen om alarm_hoog te forceren...")
         huidig_niveau = p.get_niveau()
-        proces.ALARM_HOOG = huidig_niveau + 2  # net iets boven huidig niveau
+        Proces.ALARM_HOOG = huidig_niveau + 2  # net iets boven huidig niveau
         p.set_klep_hoek(90)
         time.sleep(6)
         print_status("Na verlaagde drempel + klep open", p)
