@@ -1,10 +1,57 @@
 <!DOCTYPE html>
-<html lang="en">
+
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+
+    <title>Tank Dashboard</title>
+
 </head>
+
 <body>
 
+<h1>Tank Dashboard</h1>
+
+<p>Niveau</p>
+
+<h2 id="level">0</h2>
+
+<p>Klep</p>
+
+<h2 id="valve">0</h2>
+
+<p>Pomp</p>
+
+<h2 id="pump">OFF</h2>
+
+<button onclick="pumpOn()">
+
+Pomp Aan
+
+</button>
+
+<button onclick="pumpOff()">
+
+Pomp Uit
+
+</button>
+
+<input
+
+type="range"
+
+min="0"
+
+max="180"
+
+value="0"
+
+oninput="moveValve(this.value)"
+
+>
+
+<script src="/static/js/dashboard.js"></script>
+
 </body>
+
 </html>
