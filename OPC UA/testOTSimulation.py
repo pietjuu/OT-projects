@@ -12,7 +12,6 @@ scenario's te controleren zonder telkens in de REPL te typen.
 """
 
 import time
-import proces
 from OTSimulation import Proces
 
 
