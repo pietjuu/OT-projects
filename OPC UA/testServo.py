@@ -2,7 +2,7 @@ import time
 from adafruit_servokit import ServoKit
 
 kit = ServoKit(channels=16)
-servo_channels = [0, 1, 2, 3]  # jouw actieve kanalen
+servo_channels = [0, 1, 2, 3]  # active channels
 
 try:
     for channel in servo_channels:
@@ -19,6 +19,6 @@ try:
         time.sleep(1)
 
 finally:
-    # Laat alle servo's los (geen signaal, voorkomt oververhitting)
+    # cleanup
     for channel in servo_channels:
         kit.servo[channel].angle = None
